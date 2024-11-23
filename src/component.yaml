@@ -1,0 +1,16 @@
+name: casos_inferencia
+version: 1.0
+type: command
+description: Componente para buscar casos basados en consultas semánticas.
+inputs:
+  query:
+    type: string
+    description: Consulta para buscar casos similares.
+outputs:
+  results:
+    type: uri_file
+    description: Resultados de la búsqueda.
+code: .
+environment: azureml:<your-environment-name>:<version>
+command: >
+  python azure_inference.py --query ${{inputs.query}} --output ${{outputs.results}}

@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Casos Search</title>
+    <link rel="stylesheet" href="/static/styles.css">
+</head>
+<body>
+    <header>
+        <h1>Buscador de Casos</h1>
+        <button id="logout-button">Cerrar Sesi&oacute;n</button>
+    </header>
+
+    <main>
+        <form id="search-form">
+            <input type="text" id="query" placeholder="Ingresa la descripcion del caso..." required>
+            <button type="submit">Buscar</button>
+        </form>
+        <div id="results"></div>
+    </main>
+
+    <script>
+        // Lógica para realizar logout
+        document.getElementById("logout-button").addEventListener("click", async () => {
+            const response = await fetch("/logout", {
+                method: "GET",
+                credentials: "include", // Asegura que se incluyan las cookies
+            });
+
+            if (response.redirected) {
+                // Redirigir a la página de login
+                window.location.href = response.url;
+            } else {
+                alert("Error al cerrar sesión");
+            }
+        });
+
+        // Lógica para manejar el formulario de búsqueda
+        document.getElementById("search-form").addEventListener("submit", async (event) => {
+            event.preventDefault();
+
+            const query = document.getElementById("query").value;
+            const response = await fetch("/search", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({ query }),
+            });
+
+            const data = await response.json();
+            const resultsContainer = document.getElementById("results");
+            resultsContainer.innerHTML = ""; // Limpiar resultados previos
+
+            if (data.results) {
+                data.results.forEach((result) => {
+                    const resultElement = document.createElement("div");
+                    resultElement.innerHTML = `Falla_reportada: ${result["Descripcion"]}, Soluci&oacute;n_Propuesta: ${result["Solucion Propuesta"]}, Caso: ${result["Numero de Incidencia"]}`;
+                    resultsContainer.appendChild(resultElement);
+                });
+        
+            } else {
+                resultsContainer.textContent = "No se encontraron resultados.";
+            }
+        });
+    </script>
+</body>
+</html>

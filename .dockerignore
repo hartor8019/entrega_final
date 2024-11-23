@@ -1,0 +1,11 @@
+# Ignorar entornos virtuales
+env/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.DS_Store
+
+# Ignorar configuraciones locales
+*.sqlite3
+*.db
